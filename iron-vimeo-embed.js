@@ -17,14 +17,14 @@ angular.module('ironVimeoEmbed', []).factory('ironVimeoService', ['$http', funct
     'use strict';
     return {
         restrict: 'E',
-        templateUrl: '/views/players/vimeoEmbed.html',
-        scope: true,
+        template: '<iframe ng-src="{{vm.videoUrl}}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
+        scope: {},
         bindToController: {
             videoId: '=',
             player: '=?'
         },
         controllerAs: 'vm',
-        controller: ['$element', '$attrs', '$scope', function ($element, $attrs, $scope) {
+        controller: ['$element', '$attrs', '$rootScope', function ($element, $attrs, $rootScope) {
             var vm = this;
             // Set video URL as iframe src.
             vm.videoUrl = $sce.trustAsResourceUrl('https://player.vimeo.com/video/' + vm.videoId + '?api=1');
@@ -43,7 +43,6 @@ angular.module('ironVimeoEmbed', []).factory('ironVimeoService', ['$http', funct
                 seekTo: function (seconds) {
                     post('seekTo', seconds);
                 }
-
             };
 
             // Listen for messages from the player
@@ -70,11 +69,16 @@ angular.module('ironVimeoEmbed', []).factory('ironVimeoService', ['$http', funct
                 var data = angular.fromJson(event.data);
                 if (data.event == 'ready') {
                     // Register event listeners for next events
+                    post('addEventListener', 'play');
                     post('addEventListener', 'pause');
                     post('addEventListener', 'finish');
                     post('addEventListener', 'playProgress');
+                    post('addEventListener', 'seek');
                 }
-                $scope.$broadcast('vimeo.player.' + data.event, data.data);
+                console.log(data.event);
+                $rootScope.$apply(function(){
+                    $rootScope.$broadcast('vimeo.player.' + data.event, data.data);
+                });
             }
 
             // Helper function for sending a message to the player

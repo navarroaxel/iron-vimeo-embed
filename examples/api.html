@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple video summary</title>
+</head>
+<body ng-app="myApp" ng-controller="myController">
+
+<h1>{{video.title}}</h1>
+User: {{video.user_name}}
+<br>
+{{video.stats_number_of_plays}} Views {{video.stats_number_of_likes}} likes
+<br>
+
+<a ng-href="{{video.url}}" target="_blank">
+    <img ng-src="{{video.thumbnail_large}}"/>
+</a>
+<br>
+{{video.duration}} seconds
+<br>
+View the console to see the full Vimeo object.
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+<script src="../iron-vimeo-embed.js"></script>
+
+<script>
+    angular.module('myApp', ['ironVimeoEmbed']).controller('myController', function ($scope, $log, ironVimeoService) {
+        ironVimeoService.getVideo('76979871').then(function (data) {
+            $scope.video = data;
+            $log.info($scope.video);
+        });
+    });
+</script>
+</body>
+</html>
