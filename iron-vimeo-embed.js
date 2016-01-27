@@ -75,7 +75,6 @@ angular.module('ironVimeoEmbed', []).factory('ironVimeoService', ['$http', funct
                     post('addEventListener', 'playProgress');
                     post('addEventListener', 'seek');
                 }
-                console.log(data.event);
                 $rootScope.$apply(function(){
                     $rootScope.$broadcast('vimeo.player.' + data.event, data.data);
                 });
