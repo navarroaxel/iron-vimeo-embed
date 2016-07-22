@@ -17,20 +17,26 @@ angular.module('ironVimeoEmbed', []).factory('ironVimeoService', ['$http', funct
     'use strict';
     return {
         restrict: 'E',
-        template: '<iframe ng-src="{{vm.videoUrl}}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
+        template: '<iframe ng-src="{{$ctrl.videoUrl}}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
         scope: {},
         bindToController: {
             videoId: '=',
-            player: '=?'
+            player: '=?',
+            onReady: '&',
+            onPlay: '&',
+            onPause: '&',
+            onFinish: '&',
+            onPlayProgress: '&',
+            onSeek: '&'
         },
-        controllerAs: 'vm',
+        controllerAs: '$ctrl',
         controller: ['$element', '$attrs', '$rootScope', function ($element, $attrs, $rootScope) {
-            var vm = this;
+            var $ctrl = this;
             // Set video URL as iframe src.
-            vm.videoUrl = $sce.trustAsResourceUrl('https://player.vimeo.com/video/' + vm.videoId + '?api=1');
+            $ctrl.videoUrl = $sce.trustAsResourceUrl('https://player.vimeo.com/video/' + $ctrl.videoId + '?api=1');
 
             // Exposed API
-            vm.player = {
+            $ctrl.player = {
                 play: function () {
                     post('play');
                 },
@@ -75,8 +81,9 @@ angular.module('ironVimeoEmbed', []).factory('ironVimeoService', ['$http', funct
                     post('addEventListener', 'playProgress');
                     post('addEventListener', 'seek');
                 }
-                $rootScope.$apply(function(){
-                    $rootScope.$broadcast('vimeo.player.' + data.event, data.data);
+                $rootScope.$apply(function () {
+                    // converts 'ready' event name to onReady handler name.
+                    $ctrl['on' + data.event.substr(0, 1).toUpperCase() + data.event.substr(1)]({data: data.data});
                 });
             }
 

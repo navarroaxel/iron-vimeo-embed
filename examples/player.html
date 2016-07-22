@@ -6,7 +6,13 @@
 </head>
 <body ng-app="myApp" ng-controller="myController">
 
-<iron-vimeo-embed video-id="76979871" player="lePlayer"></iron-vimeo-embed>
+<iron-vimeo-embed video-id="76979871" player="lePlayer"
+                  on-ready="onReady(data)"
+                  on-play="onPlay(data)"
+                  on-pause="onPause(data)"
+                  on-finish="onFinish(data)"
+                  on-play-progress="onPlayProgress(data)"
+                  on-seek="onSeek(data)"></iron-vimeo-embed>
 <br>
 
 <button ng-click="play()">Play</button>
@@ -17,7 +23,7 @@
 <br>
 Status: {{status}}
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
 <script src="../iron-vimeo-embed.js"></script>
 
 <script>
@@ -34,18 +40,18 @@ Status: {{status}}
         $scope.seekTo = function (seconds) {
             $scope.lePlayer.seekTo(seconds);
         };
-        $scope.$on('vimeo.player.ready', function () {
+        $scope.onReady = function () {
             $scope.status = 'The video is ready!';
-        });
-        $scope.$on('vimeo.player.play', function () {
+        };
+        $scope.onPlay = function () {
             $scope.status = 'The video has started!';
-        });
-        $scope.$on('vimeo.player.pause', function () {
+        };
+        $scope.onPause = function () {
             $scope.status = 'The video has been stopped';
-        });
-        $scope.$on('vimeo.player.playProgress', function (event, data) {
+        };
+        $scope.onPlayProgress = function (data) {
             $scope.status = data.seconds + 's played that is ' + data.percent + '% of ' + data.duration + ' seconds';
-        });
+        };
     });
 </script>
 </body>
