@@ -52,6 +52,9 @@ Status: {{status}}
         $scope.onPlayProgress = function (data) {
             $scope.status = data.seconds + 's played that is ' + data.percent + '% of ' + data.duration + ' seconds';
         };
+        $scope.onFinish = function () {
+            $scope.status = 'The video has finished!';
+        };
     });
 </script>
 </body>
