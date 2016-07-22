@@ -1,6 +1,6 @@
 {
   "name": "iron-vimeo-embed",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "A utility resource for embed Vimeo videos",
   "authors": [
     "Axel Navarro <navarroaxel@gmail.com>"
